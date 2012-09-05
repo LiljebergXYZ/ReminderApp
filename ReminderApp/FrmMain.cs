@@ -43,7 +43,8 @@ namespace ReminderApp
       listView1.Columns.Add("Message", 125);
       listView1.Columns.Add("Recurring", 60);
       listView1.Columns.Add("Active", -2);
-      
+
+      ReadSettings();
       AddReminders();
 
       //Make a mouseeventhandler for the listview
