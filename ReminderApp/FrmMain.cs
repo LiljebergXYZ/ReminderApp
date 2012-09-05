@@ -31,6 +31,11 @@ namespace ReminderApp
       //Set title
       this.Text = "Reminder app v" + version;
 
+      //Create settings file if not exist
+      if (!File.Exists("settings.txt")) {
+        File.WriteAllText("settings.txt", Properties.Resources.settings);
+      } 
+
       //Set all the default values for the listview
       listView1.View = View.Details;
       listView1.GridLines = true;
@@ -292,6 +297,9 @@ namespace ReminderApp
 
         //Remove it from the listview
         listView1.Items.RemoveAt(index);
+
+        //Add reminders
+        AddReminders();
       }
       catch (Exception ex) {
         MessageBox.Show("Error: " + ex);
