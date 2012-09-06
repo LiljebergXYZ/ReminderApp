@@ -18,8 +18,7 @@ namespace ReminderApp
     public string filename = "remind.txt";
     public string version = "1.10";
 
-    private Dictionary<String, string> settings = new Dictionary<String, string>();
-    private string settingsFilename = "settings.txt";
+    public Settings settings;
 
     public FrmMain()
     {
@@ -29,12 +28,14 @@ namespace ReminderApp
     private void FrmMain_Load(object sender, EventArgs e)
     {
       //Set title
-      this.Text = "Reminder app v" + version;
+      this.Text = "Reminder app " + version;
 
       //Create settings file if not exist
-      if (!File.Exists("settings.txt")) {
-        File.WriteAllText("settings.txt", Properties.Resources.settings);
-      } 
+      if (!File.Exists("settings.ini")) {
+        File.WriteAllText("settings.ini", Properties.Resources.settings);
+      }
+
+      settings = new Settings("settings.ini");
 
       //Set all the default values for the listview
       listView1.View = View.Details;
@@ -49,7 +50,6 @@ namespace ReminderApp
       listView1.Columns.Add("Recurring", 60);
       listView1.Columns.Add("Active", -2);
 
-      ReadSettings();
       AddReminders();
 
       //Make a mouseeventhandler for the listview
@@ -176,13 +176,13 @@ namespace ReminderApp
             }
 
             //Show the message for the reminder
-            if (settings["Bubble"] == "true") {
+            if (settings.GetBool("Bubble")) {
               notifyIcon.BalloonTipIcon = ToolTipIcon.Warning;
               notifyIcon.BalloonTipTitle = "Reminder";
               notifyIcon.BalloonTipText = info[2];
               notifyIcon.ShowBalloonTip(2000);
             }
-            if (settings["Messagebox"] == "true") {
+            if (settings.GetBool("Messagebox")) {
               MessageBox.Show(info[2]);
             }
 
@@ -191,29 +191,6 @@ namespace ReminderApp
         }
       }
 
-    }
-
-    //Read the settings from file
-    public void ReadSettings()
-    {
-      //Clear settings dictionary
-      settings.Clear();
-      try {
-        using (StreamReader sr = new StreamReader(settingsFilename)) {
-
-          string line;
-
-          while ((line = sr.ReadLine()) != null) {
-            String[] keyPair = line.Split('=');
-
-            settings.Add(keyPair[0], keyPair[1]);
-          }
-
-        }
-      }
-      catch (Exception ex) {
-        MessageBox.Show("Error: " + ex);
-      }
     }
 
     //Function returning a list of the reminders in reminder.txt

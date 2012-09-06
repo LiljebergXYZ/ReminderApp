@@ -72,6 +72,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings.cs" />
     <EmbeddedResource Include="FrmAddReminder.resx">
       <DependentUpon>FrmAddReminder.cs</DependentUpon>
     </EmbeddedResource>
@@ -94,7 +95,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="clock.ico" />
-    <None Include="Resources\settings.txt" />
+    <None Include="Resources\settings.ini" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\Release\" />

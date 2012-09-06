@@ -46,35 +46,43 @@ namespace ReminderApp
       //If not edit mode just add the reminder to the end of remind.txt
       if(dayBox.SelectedItem != null)
       if (!edit) {
-        try {
-          using (StreamWriter sw = File.AppendText(filename)) {
+        if (!textBox1.Text.Contains(",")) {
+          try {
+            using (StreamWriter sw = File.AppendText(filename)) {
 
-            string recurr;
-            string active;
+              string recurr;
+              string active;
 
-            if(recurringBox.Checked)
-            {
-              recurr = "Yes";
-            }else{
-              recurr = "No";
+              if (recurringBox.Checked) {
+                recurr = "Yes";
+              }
+              else {
+                recurr = "No";
+              }
+
+              if (activeBox.Checked) {
+                active = "Yes";
+              }
+              else {
+                active = "No";
+              }
+
+              //Write the new reminder to the remind.txt
+              sw.WriteLine(dayBox.SelectedItem.ToString() + "," + timeNow + "," + textBox1.Text + "," + recurr + "," + active);
+              sw.Close();
             }
-
-            if(activeBox.Checked){
-              active = "Yes";
-            }else{
-              active = "No";
-            }
-
-            sw.WriteLine(dayBox.SelectedItem.ToString() + "," + timeNow + "," + textBox1.Text + "," + recurr + "," + active);
-            sw.Close();
           }
-        }
-        catch (Exception ex) {
-          MessageBox.Show("Error: " + ex);
-        }
+          catch (Exception ex) {
+            MessageBox.Show("Error: " + ex);
+          }
 
-        //Reload the reminders in the main form and application
-        frm.AddReminders();
+          //Reload the reminders in the main form and application
+          frm.AddReminders();
+          this.Hide();
+        }
+        else {
+          MessageBox.Show("No , sign is allowed in message");
+        }
       }
       else {
         //Re read all the reminders into memory
@@ -122,8 +130,8 @@ namespace ReminderApp
           MessageBox.Show("Error: " + ex);
         }
         frm.AddReminders();
-      }
         this.Hide();
+      }
     }
 
     private void button2_Click(object sender, EventArgs e)

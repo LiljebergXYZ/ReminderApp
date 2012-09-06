@@ -1,2 +1,2 @@
-Bubble=true
-Messagebox=true
+Bubble=True
+Messagebox=True
