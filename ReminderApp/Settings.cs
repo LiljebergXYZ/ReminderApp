@@ -66,12 +66,27 @@ namespace ReminderApp
       return false;
     }
 
+    public int GetInt(string key)
+    {
+      try {
+        if (keys.ContainsKey(key))
+          return int.Parse(keys[key]);
+      }
+      catch { }
+      return 0;
+    }
+
     public void SetString(string key, string value)
     {
       keys[key] = value;
     }
 
     public void SetBool(string key, bool value)
+    {
+      keys[key] = value.ToString();
+    }
+
+    public void SetInt(string key, int value)
     {
       keys[key] = value.ToString();
     }

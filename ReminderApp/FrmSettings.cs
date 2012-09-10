@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.IO;
+using Microsoft.Win32;
 using System.Windows.Forms;
 
 namespace ReminderApp
@@ -14,35 +15,47 @@ namespace ReminderApp
   {
     FrmMain frm;
 
+    RegistryKey autostartRegKey;
+
     public FrmSettings(FrmMain frm)
     {
       InitializeComponent();
+
+      autostartRegKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+
       this.frm = frm;
     }
 
     private void FrmSettings_Load(object sender, EventArgs e)
     {
       //Read settings and set the check boxes to right state
+      checkAutostart.Checked = autostartRegKey.GetValue("ReminderApp") != null;
+
       if(frm.settings.GetBool("Bubble"))
-        checkBox1.Checked = true;
+        checkBubble.Checked = true;
 
       if (frm.settings.GetBool("Messagebox"))
-        checkBox2.Checked = true;
+        checkMBox.Checked = true;
 
       button1.Enabled = false;
     }
 
     private void button1_Click(object sender, EventArgs e)
     {
+      //Autostart check
+      if (checkAutostart.Checked)
+        autostartRegKey.SetValue("ReminderApp", Application.ExecutablePath);
+      else
+        autostartRegKey.DeleteValue("ReminderApp", false);
 
       //Set the values in dictionary
       try {
-        if (checkBox1.Checked)
+        if (checkBubble.Checked)
           frm.settings.SetBool("Bubble", true);
         else
           frm.settings.SetBool("Bubble", false);
 
-        if (checkBox2.Checked)
+        if (checkMBox.Checked)
           frm.settings.SetBool("Messagebox", true);
         else
           frm.settings.SetBool("Messagebox", false);
@@ -53,12 +66,12 @@ namespace ReminderApp
         MessageBox.Show("Error: " + ex);
       }
 
-      this.Hide();
+      this.Close();
     }
 
     private void button2_Click(object sender, EventArgs e)
     {
-      this.Hide();
+      this.Close();
     }
 
     private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -67,6 +80,11 @@ namespace ReminderApp
     }
 
     private void checkBox2_CheckedChanged(object sender, EventArgs e)
+    {
+      button1.Enabled = true;
+    }
+
+    private void checkAutostart_CheckedChanged(object sender, EventArgs e)
     {
       button1.Enabled = true;
     }

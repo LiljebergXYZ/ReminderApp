@@ -35,6 +35,17 @@ namespace ReminderApp
       if (!edit) {
         timePicker.Value = DateTime.Now;
       }
+
+      string[] daysArr = { "Monday", "Tuesday", "Wednesday",
+                              "Thursday", "Friday", "Saturday",
+                              "Sunday", "Workdays", "Weekend", 
+                              "Everyday" };
+
+      for (int i = 0; i < daysArr.Length; i++) {
+        string item = daysArr[i];
+          dayBox.Items.Add(item);
+      }
+
     }
 
     private void button1_Click(object sender, EventArgs e)
@@ -44,9 +55,9 @@ namespace ReminderApp
       String timeNow = dt.ToShortTimeString();
 
       //If not edit mode just add the reminder to the end of remind.txt
-      if(dayBox.SelectedItem != null)
+      if(dayBox.Text != null)
       if (!edit) {
-        if (!textBox1.Text.Contains(",")) {
+        if (!textBox1.Text.Contains(";")) {
           try {
             using (StreamWriter sw = File.AppendText(filename)) {
 
@@ -68,7 +79,7 @@ namespace ReminderApp
               }
 
               //Write the new reminder to the remind.txt
-              sw.WriteLine(dayBox.SelectedItem.ToString() + "," + timeNow + "," + textBox1.Text + "," + recurr + "," + active);
+              sw.WriteLine(dayBox.Text + ";" + timeNow + ";" + textBox1.Text + ";" + recurr + ";" + active);
               sw.Close();
             }
           }
@@ -78,10 +89,10 @@ namespace ReminderApp
 
           //Reload the reminders in the main form and application
           frm.AddReminders();
-          this.Hide();
+          this.Close();
         }
         else {
-          MessageBox.Show("No , sign is allowed in message");
+          MessageBox.Show("No ; sign is allowed in message");
         }
       }
       else {
@@ -114,13 +125,13 @@ namespace ReminderApp
           }
 
           //Split and change the information for remind with index
-          String[] remind = remindList[index].Split(',');
-          remind[0] = dayBox.SelectedItem.ToString();
+          String[] remind = remindList[index].Split(';');
+          remind[0] = dayBox.Text;
           remind[1] = timeNow;
           remind[2] = textBox1.Text;
           remind[3] = recurr;
           remind[4] = active;
-          string reminder = remind[0] + "," + remind[1] + "," + remind[2] + "," + remind[3] + "," + remind[4];
+          string reminder = remind[0] + ";" + remind[1] + ";" + remind[2] + ";" + remind[3] + ";" + remind[4];
           remindList[index] = reminder;
 
           //Rewrite the remind.txt file with changes
@@ -130,18 +141,14 @@ namespace ReminderApp
           MessageBox.Show("Error: " + ex);
         }
         frm.AddReminders();
-        this.Hide();
+        this.Close();
       }
     }
 
     private void button2_Click(object sender, EventArgs e)
     {
-      this.Hide();
+      this.Close();
     }
 
-    private void dayBox_SelectedIndexChanged(object sender, EventArgs e)
-    {
-      button1.Enabled = true;
-    }
   }
 }

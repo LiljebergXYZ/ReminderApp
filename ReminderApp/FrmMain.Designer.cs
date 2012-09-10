@@ -39,10 +39,11 @@
       this.listViewMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.activateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.timer1 = new System.Windows.Forms.Timer(this.components);
       this.okBtn = new System.Windows.Forms.Button();
       this.settingsBtn = new System.Windows.Forms.Button();
-      this.activateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.updateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.notifyIconMenu.SuspendLayout();
       this.listViewMenu.SuspendLayout();
       this.SuspendLayout();
@@ -58,22 +59,24 @@
       // notifyIconMenu
       // 
       this.notifyIconMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.updateToolStripMenuItem,
             this.showToolStripMenuItem,
             this.exitToolStripMenuItem});
       this.notifyIconMenu.Name = "notifyIconMenu";
-      this.notifyIconMenu.Size = new System.Drawing.Size(104, 48);
+      this.notifyIconMenu.Size = new System.Drawing.Size(153, 92);
       // 
       // showToolStripMenuItem
       // 
+      this.showToolStripMenuItem.Image = global::ReminderApp.Properties.Resources.settings_16;
       this.showToolStripMenuItem.Name = "showToolStripMenuItem";
-      this.showToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
-      this.showToolStripMenuItem.Text = "Show";
+      this.showToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this.showToolStripMenuItem.Text = "Settings";
       this.showToolStripMenuItem.Click += new System.EventHandler(this.showToolStripMenuItem_Click);
       // 
       // exitToolStripMenuItem
       // 
       this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-      this.exitToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+      this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
       this.exitToolStripMenuItem.Text = "Exit";
       this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
       // 
@@ -113,26 +116,33 @@
             this.removeToolStripMenuItem,
             this.activateToolStripMenuItem});
       this.listViewMenu.Name = "contextMenuStrip1";
-      this.listViewMenu.Size = new System.Drawing.Size(153, 92);
+      this.listViewMenu.Size = new System.Drawing.Size(118, 70);
       // 
       // editToolStripMenuItem
       // 
       this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-      this.editToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this.editToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
       this.editToolStripMenuItem.Text = "Edit";
       this.editToolStripMenuItem.Click += new System.EventHandler(this.editToolStripMenuItem_Click);
       // 
       // removeToolStripMenuItem
       // 
       this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
-      this.removeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this.removeToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
       this.removeToolStripMenuItem.Text = "Remove";
       this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
+      // 
+      // activateToolStripMenuItem
+      // 
+      this.activateToolStripMenuItem.Name = "activateToolStripMenuItem";
+      this.activateToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
+      this.activateToolStripMenuItem.Text = "Activate";
+      this.activateToolStripMenuItem.Click += new System.EventHandler(this.activateToolStripMenuItem_Click);
       // 
       // timer1
       // 
       this.timer1.Enabled = true;
-      this.timer1.Interval = 30000;
+      this.timer1.Interval = 60000;
       this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
       // 
       // okBtn
@@ -155,12 +165,14 @@
       this.settingsBtn.UseVisualStyleBackColor = true;
       this.settingsBtn.Click += new System.EventHandler(this.settingsBtn_Click);
       // 
-      // activateToolStripMenuItem
+      // updateToolStripMenuItem
       // 
-      this.activateToolStripMenuItem.Name = "activateToolStripMenuItem";
-      this.activateToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-      this.activateToolStripMenuItem.Text = "Activate";
-      this.activateToolStripMenuItem.Click += new System.EventHandler(this.activateToolStripMenuItem_Click);
+      this.updateToolStripMenuItem.Image = global::ReminderApp.Properties.Resources.reload_16;
+      this.updateToolStripMenuItem.Name = "updateToolStripMenuItem";
+      this.updateToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+      this.updateToolStripMenuItem.Text = "Update";
+      this.updateToolStripMenuItem.Visible = false;
+      this.updateToolStripMenuItem.Click += new System.EventHandler(this.updateToolStripMenuItem_Click);
       // 
       // FrmMain
       // 
@@ -201,6 +213,7 @@
     private System.Windows.Forms.Button okBtn;
     private System.Windows.Forms.Button settingsBtn;
     private System.Windows.Forms.ToolStripMenuItem activateToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem updateToolStripMenuItem;
   }
 }
 

@@ -52,6 +52,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CheckedComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="FrmAddReminder.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -95,6 +98,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="clock.ico" />
+    <None Include="reload_16.png" />
+    <None Include="settings_16.png" />
+    <None Include="setting_tools.ico" />
     <None Include="Resources\settings.ini" />
   </ItemGroup>
   <ItemGroup>

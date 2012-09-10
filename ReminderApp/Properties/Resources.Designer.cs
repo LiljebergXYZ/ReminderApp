@@ -61,13 +61,33 @@ namespace ReminderApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Bubble=true
-        ///Messagebox=true
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap reload_16 {
+            get {
+                object obj = ResourceManager.GetObject("reload_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bubble=True
+        ///Messagebox=True
         ///.
         /// </summary>
         internal static string settings {
             get {
                 return ResourceManager.GetString("settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap settings_16 {
+            get {
+                object obj = ResourceManager.GetObject("settings_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }

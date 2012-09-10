@@ -7,7 +7,10 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Net;
 using System.Windows.Forms;
+using System.Threading;
+using System.Diagnostics;
 
 namespace ReminderApp
 {
@@ -15,8 +18,9 @@ namespace ReminderApp
   {
 
     public List<String> reminders = new List<String>();
-    public string filename = "remind.txt";
-    public string version = "1.10";
+    public string filename = Application.StartupPath + "\\remind.txt";
+    public string settingFilename = Application.StartupPath + "\\settings.ini";
+    public string version = "1.12";
 
     public Settings settings;
 
@@ -30,12 +34,16 @@ namespace ReminderApp
       //Set title
       this.Text = "Reminder app " + version;
 
+      Thread updateThread = new Thread(CheckUpdate);
+      updateThread.Start();
+
       //Create settings file if not exist
-      if (!File.Exists("settings.ini")) {
-        File.WriteAllText("settings.ini", Properties.Resources.settings);
+      if (!File.Exists(settingFilename)) {
+        File.WriteAllText(settingFilename, Properties.Resources.settings);
       }
 
-      settings = new Settings("settings.ini");
+      //Load settings
+      settings = new Settings(settingFilename);
 
       //Set all the default values for the listview
       listView1.View = View.Details;
@@ -44,7 +52,7 @@ namespace ReminderApp
       listView1.MultiSelect = false;
 
       //Add the columns needed to the listview
-      listView1.Columns.Add("Day", 70);
+      listView1.Columns.Add("Day(s)", 70);
       listView1.Columns.Add("Time", 70);
       listView1.Columns.Add("Message", 125);
       listView1.Columns.Add("Recurring", 60);
@@ -109,7 +117,7 @@ namespace ReminderApp
 
       //For loop to check all the reminders if it's time to remind.
       for (int i = 0; i < reminders.Count; i++) {
-        String[] info = reminders[i].Split(',');
+        String[] info = reminders[i].Split(';');
 
         //Checks if the reminder is active
         if (info[4] != "No") {
@@ -122,7 +130,12 @@ namespace ReminderApp
           }
 
           //If the time and day is correct
-          if (timeNow == info[1] && day == info[0]) {
+          if (timeNow == info[1] &&
+            (day == info[0] ||
+            info[0].ToUpper() == "EVERYDAY" ||
+            (day == "Monday" || day == "Tuesday" || day == "Wednesday" || day == "Thursday" || day == "Friday") &&
+            info[0].ToUpper() == "WORKDAYS") ||
+            (day == "Saturday" || day == "Sunday") && info[0].ToUpper() == "WEEKEND") {
 
             //If it's not going to recurr set active to "No"
             if (info[3] != "Yes") {
@@ -137,37 +150,9 @@ namespace ReminderApp
                 }
               }
 
-              String[] remind = remindList[i].Split(',');
+              String[] remind = remindList[i].Split(';');
               remind[4] = "No";
-              string reminder = remind[0] + "," + remind[1] + "," + remind[2] + "," + remind[3] + "," + remind[4];
-              remindList[i] = reminder;
-
-              File.WriteAllLines(filename, remindList.ToArray());
-              AddReminders();
-
-            }
-
-            //Show the message for the reminder
-            MessageBox.Show(info[2]);
-
-          }
-          else if (timeNow == info[1] && info[0] == "EVERYDAY") {
-            //If it's not going to recurr set active to "No"
-            if (info[3] != "Yes") {
-
-              List<String> remindList = new List<String>();
-
-              using (StreamReader sr = new StreamReader(filename)) {
-                string line;
-
-                while ((line = sr.ReadLine()) != null) {
-                  remindList.Add(line);
-                }
-              }
-
-              String[] remind = remindList[i].Split(',');
-              remind[4] = "No";
-              string reminder = remind[0] + "," + remind[1] + "," + remind[2] + "," + remind[3] + "," + remind[4];
+              string reminder = remind[0] + ";" + remind[1] + ";" + remind[2] + ";" + remind[3] + ";" + remind[4];
               remindList[i] = reminder;
 
               File.WriteAllLines(filename, remindList.ToArray());
@@ -187,10 +172,69 @@ namespace ReminderApp
             }
 
           }
+          else {
+            string[] days = info[0].Split(',');
+            foreach(string str in days){
+              if (day == str) {
+
+                //If it's not going to recurr set active to "No"
+                if (info[3] != "Yes") {
+
+                  List<String> remindList = new List<String>();
+
+                  using (StreamReader sr = new StreamReader(filename)) {
+                    string line;
+
+                    while ((line = sr.ReadLine()) != null) {
+                      remindList.Add(line);
+                    }
+                  }
+
+                  String[] remind = remindList[i].Split(';');
+                  remind[4] = "No";
+                  string reminder = remind[0] + ";" + remind[1] + ";" + remind[2] + ";" + remind[3] + ";" + remind[4];
+                  remindList[i] = reminder;
+
+                  File.WriteAllLines(filename, remindList.ToArray());
+                  AddReminders();
+
+                }
+
+                //Show the message for the reminder
+                if (settings.GetBool("Bubble")) {
+                  notifyIcon.BalloonTipIcon = ToolTipIcon.Warning;
+                  notifyIcon.BalloonTipTitle = "Reminder";
+                  notifyIcon.BalloonTipText = info[2];
+                  notifyIcon.ShowBalloonTip(2000);
+                }
+                if (settings.GetBool("Messagebox")) {
+                  MessageBox.Show(info[2]);
+                }
+
+              }
+            }
+          }
 
         }
       }
 
+    }
+
+    //Check for update
+    private void CheckUpdate()
+    {
+      try {
+        WebClient wc = new WebClient();
+        string latest = wc.DownloadString("http://dan-l.net/reminder/version.txt");
+        if (version != latest) {
+          notifyIcon.BalloonTipIcon = ToolTipIcon.Info;
+          notifyIcon.BalloonTipTitle = "Reminder";
+          notifyIcon.BalloonTipText = "There's an update available. The latest version is v" + latest;
+          notifyIcon.ShowBalloonTip(2000);
+
+          updateToolStripMenuItem.Visible = true;
+        }
+      }catch{ }
     }
 
     //Function returning a list of the reminders in reminder.txt
@@ -239,7 +283,7 @@ namespace ReminderApp
 
         //Split and add all the reminders to the listview
         for (int i = 0; i < reminders.Count; i++) {
-          String[] info = reminders[i].Split(',');
+          String[] info = reminders[i].Split(';');
           listView1.Items.Add(new ListViewItem(new string[] { info[0], info[1], info[2], info[3], info[4] }));
         }
       }
@@ -294,14 +338,18 @@ namespace ReminderApp
       FrmAddReminder frmAddReminder = new FrmAddReminder(this, true, index);
 
       //Split the reminder with index to get all info
-      String[] info = reminders[index].Split(',');
+      String[] info = reminders[index].Split(';');
 
       //Convert the time to DateTime for use in datetimepicker
       DateTime nwdt = new DateTime();
       nwdt = Convert.ToDateTime(info[1]);
 
       //Set all the values in the form to edit
-      frmAddReminder.dayBox.SelectedItem = info[0];
+      frmAddReminder.Show();
+      List<int> days = dayToInt(info[0]);
+      for (int i = 0; i < days.Count; i++) {
+        frmAddReminder.dayBox.SetItemChecked(days[i], true);
+      }
       frmAddReminder.timePicker.Value = nwdt;
       frmAddReminder.textBox1.Text = info[2];
       if (info[3] == "Yes") {
@@ -318,7 +366,7 @@ namespace ReminderApp
       }
 
       //Show the form
-      frmAddReminder.Show();
+      //frmAddReminder.Show();
     }
 
     private void button2_Click(object sender, EventArgs e)
@@ -344,9 +392,9 @@ namespace ReminderApp
         List<string> lst = File.ReadAllLines(filename).ToList();
 
         //Remove the reminder with index
-        String[] info = lst[index].Split(',');
+        String[] info = lst[index].Split(';');
 
-        String fullInfo = info[0] + "," + info[1] + "," + info[2] + "," + info[3] + ",Yes";
+        String fullInfo = info[0] + ";" + info[1] + ";" + info[2] + ";" + info[3] + ";Yes";
 
         lst[index] = fullInfo;
 
@@ -359,6 +407,52 @@ namespace ReminderApp
       catch (Exception ex) {
         MessageBox.Show("Error: " + ex);
       }
+    }
+
+    private List<int> dayToInt(string day)
+    {
+      List<int> days = new List<int>();
+      string[] dayArr = day.Split(',');
+      for (int i = 0; i < dayArr.Length; i++) {
+        switch (dayArr[i].ToLower()) {
+          case "monday":
+            days.Add(0);
+            break;
+          case "tuesday":
+            days.Add(1);
+            break;
+          case "wednesday":
+            days.Add(2);
+            break;
+          case "thursday":
+            days.Add(3);
+            break;
+          case "friday":
+            days.Add(4);
+            break;
+          case "saturday":
+            days.Add(5);
+            break;
+          case "sunday":
+            days.Add(6);
+            break;
+          case "workdays":
+            days.Add(7);
+            break;
+          case "weekend":
+            days.Add(8);
+            break;
+          case "everyday":
+            days.Add(9);
+            break;
+        }
+      }
+      return days;
+    }
+
+    private void updateToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      Process.Start("http://dan-l.net/reminder/");
     }
   }
 }

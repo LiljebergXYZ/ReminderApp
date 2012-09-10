@@ -30,7 +30,6 @@
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmAddReminder));
       this.timePicker = new System.Windows.Forms.DateTimePicker();
       this.label1 = new System.Windows.Forms.Label();
-      this.dayBox = new System.Windows.Forms.ComboBox();
       this.label2 = new System.Windows.Forms.Label();
       this.textBox1 = new System.Windows.Forms.TextBox();
       this.label3 = new System.Windows.Forms.Label();
@@ -38,6 +37,7 @@
       this.activeBox = new System.Windows.Forms.CheckBox();
       this.recurringBox = new System.Windows.Forms.CheckBox();
       this.button2 = new System.Windows.Forms.Button();
+      this.dayBox = new CheckComboBoxTest.CheckedComboBox();
       this.SuspendLayout();
       // 
       // timePicker
@@ -56,25 +56,6 @@
       this.label1.Size = new System.Drawing.Size(33, 13);
       this.label1.TabIndex = 1;
       this.label1.Text = "Time:";
-      // 
-      // dayBox
-      // 
-      this.dayBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-      this.dayBox.FormattingEnabled = true;
-      this.dayBox.Items.AddRange(new object[] {
-            "Monday",
-            "Tuesday",
-            "Wednesday",
-            "Thursday",
-            "Friday",
-            "Saturday",
-            "Sunday",
-            "EVERYDAY"});
-      this.dayBox.Location = new System.Drawing.Point(61, 16);
-      this.dayBox.Name = "dayBox";
-      this.dayBox.Size = new System.Drawing.Size(152, 21);
-      this.dayBox.TabIndex = 2;
-      this.dayBox.SelectedIndexChanged += new System.EventHandler(this.dayBox_SelectedIndexChanged);
       // 
       // label2
       // 
@@ -103,7 +84,6 @@
       // 
       // button1
       // 
-      this.button1.Enabled = false;
       this.button1.Location = new System.Drawing.Point(73, 149);
       this.button1.Name = "button1";
       this.button1.Size = new System.Drawing.Size(75, 23);
@@ -144,11 +124,25 @@
       this.button2.UseVisualStyleBackColor = true;
       this.button2.Click += new System.EventHandler(this.button2_Click);
       // 
+      // dayBox
+      // 
+      this.dayBox.CheckOnClick = true;
+      this.dayBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
+      this.dayBox.DropDownHeight = 1;
+      this.dayBox.FormattingEnabled = true;
+      this.dayBox.IntegralHeight = false;
+      this.dayBox.Location = new System.Drawing.Point(61, 16);
+      this.dayBox.Name = "dayBox";
+      this.dayBox.Size = new System.Drawing.Size(152, 21);
+      this.dayBox.TabIndex = 14;
+      this.dayBox.ValueSeparator = ",";
+      // 
       // FrmAddReminder
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(236, 186);
+      this.Controls.Add(this.dayBox);
       this.Controls.Add(this.button2);
       this.Controls.Add(this.recurringBox);
       this.Controls.Add(this.activeBox);
@@ -156,7 +150,6 @@
       this.Controls.Add(this.label3);
       this.Controls.Add(this.textBox1);
       this.Controls.Add(this.label2);
-      this.Controls.Add(this.dayBox);
       this.Controls.Add(this.label1);
       this.Controls.Add(this.timePicker);
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -176,7 +169,6 @@
 
     public System.Windows.Forms.DateTimePicker timePicker;
     private System.Windows.Forms.Label label1;
-    public System.Windows.Forms.ComboBox dayBox;
     private System.Windows.Forms.Label label2;
     public System.Windows.Forms.TextBox textBox1;
     private System.Windows.Forms.Label label3;
@@ -184,5 +176,6 @@
     public System.Windows.Forms.CheckBox activeBox;
     public System.Windows.Forms.CheckBox recurringBox;
     private System.Windows.Forms.Button button2;
+    public CheckComboBoxTest.CheckedComboBox dayBox;
   }
 }
