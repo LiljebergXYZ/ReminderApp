@@ -11,6 +11,7 @@ using System.Net;
 using System.Windows.Forms;
 using System.Threading;
 using System.Diagnostics;
+using IrrKlang;
 
 namespace ReminderApp
 {
@@ -20,7 +21,10 @@ namespace ReminderApp
     public List<String> reminders = new List<String>();
     public string filename = Application.StartupPath + "\\remind.txt";
     public string settingFilename = Application.StartupPath + "\\settings.ini";
-    public string version = "1.12";
+    public string version = "1.13";
+
+    ISoundEngine soundEngine = new ISoundEngine();
+    ISound currentlyPlayingSound;
 
     public Settings settings;
 
@@ -56,7 +60,8 @@ namespace ReminderApp
       listView1.Columns.Add("Time", 70);
       listView1.Columns.Add("Message", 125);
       listView1.Columns.Add("Recurring", 60);
-      listView1.Columns.Add("Active", -2);
+      listView1.Columns.Add("Active", 55);
+      listView1.Columns.Add("Alert Signal", -2);
 
       AddReminders();
 
@@ -79,7 +84,8 @@ namespace ReminderApp
       base.OnFormClosing(e);
 
       //Close application for real if windows is shutting down
-      if (e.CloseReason == CloseReason.WindowsShutDown) return;
+      if (e.CloseReason == CloseReason.WindowsShutDown)
+        return;
 
       //If user close the window minimize
       if (e.CloseReason == CloseReason.UserClosing) {
@@ -152,7 +158,7 @@ namespace ReminderApp
 
               String[] remind = remindList[i].Split(';');
               remind[4] = "No";
-              string reminder = remind[0] + ";" + remind[1] + ";" + remind[2] + ";" + remind[3] + ";" + remind[4];
+              string reminder = remind[0] + ";" + remind[1] + ";" + remind[2] + ";" + remind[3] + ";" + remind[4] + ";" + remind[5];
               remindList[i] = reminder;
 
               File.WriteAllLines(filename, remindList.ToArray());
@@ -167,6 +173,8 @@ namespace ReminderApp
               notifyIcon.BalloonTipText = info[2];
               notifyIcon.ShowBalloonTip(2000);
             }
+            if (info[5] != null)
+              currentlyPlayingSound = soundEngine.Play2D(@"./signals/" + info[5]);
             if (settings.GetBool("Messagebox")) {
               MessageBox.Show(info[2]);
             }
@@ -284,7 +292,7 @@ namespace ReminderApp
         //Split and add all the reminders to the listview
         for (int i = 0; i < reminders.Count; i++) {
           String[] info = reminders[i].Split(';');
-          listView1.Items.Add(new ListViewItem(new string[] { info[0], info[1], info[2], info[3], info[4] }));
+          listView1.Items.Add(new ListViewItem(new string[] { info[0], info[1], info[2], info[3], info[4], info[5] }));
         }
       }
       catch (Exception ex) {
@@ -364,6 +372,7 @@ namespace ReminderApp
       else {
         frmAddReminder.activeBox.Checked = false;
       }
+      frmAddReminder.comboBox1.SelectedItem = info[5];
 
       //Show the form
       //frmAddReminder.Show();

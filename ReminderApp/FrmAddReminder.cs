@@ -46,6 +46,14 @@ namespace ReminderApp
           dayBox.Items.Add(item);
       }
 
+      comboBox1.Items.Clear();
+      DirectoryInfo dinfo = new DirectoryInfo("./signals/");
+      FileInfo[] files = dinfo.GetFiles("*.ogg");
+      comboBox1.Items.Add("None");
+      comboBox1.SelectedIndex = 0;
+      foreach (FileInfo file in files) {
+        comboBox1.Items.Add(file.Name);
+      }
     }
 
     private void button1_Click(object sender, EventArgs e)
@@ -63,6 +71,7 @@ namespace ReminderApp
 
               string recurr;
               string active;
+              string sound = "";
 
               if (recurringBox.Checked) {
                 recurr = "Yes";
@@ -78,8 +87,11 @@ namespace ReminderApp
                 active = "No";
               }
 
+              if (comboBox1.SelectedItem.ToString() != "None")
+                sound = comboBox1.SelectedItem.ToString();
+
               //Write the new reminder to the remind.txt
-              sw.WriteLine(dayBox.Text + ";" + timeNow + ";" + textBox1.Text + ";" + recurr + ";" + active);
+              sw.WriteLine(dayBox.Text + ";" + timeNow + ";" + textBox1.Text + ";" + recurr + ";" + active + ";" + sound);
               sw.Close();
             }
           }
@@ -109,6 +121,7 @@ namespace ReminderApp
 
           string recurr;
           string active;
+          string sound = "";
 
           if (recurringBox.Checked) {
             recurr = "Yes";
@@ -124,6 +137,9 @@ namespace ReminderApp
             active = "No";
           }
 
+          if (comboBox1.SelectedItem.ToString() != "None")
+            sound = comboBox1.SelectedItem.ToString();
+
           //Split and change the information for remind with index
           String[] remind = remindList[index].Split(';');
           remind[0] = dayBox.Text;
@@ -131,7 +147,7 @@ namespace ReminderApp
           remind[2] = textBox1.Text;
           remind[3] = recurr;
           remind[4] = active;
-          string reminder = remind[0] + ";" + remind[1] + ";" + remind[2] + ";" + remind[3] + ";" + remind[4];
+          string reminder = remind[0] + ";" + remind[1] + ";" + remind[2] + ";" + remind[3] + ";" + remind[4] + ";" + sound;
           remindList[index] = reminder;
 
           //Rewrite the remind.txt file with changes

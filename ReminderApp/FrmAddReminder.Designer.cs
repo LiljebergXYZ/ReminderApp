@@ -38,6 +38,8 @@
       this.recurringBox = new System.Windows.Forms.CheckBox();
       this.button2 = new System.Windows.Forms.Button();
       this.dayBox = new CheckComboBoxTest.CheckedComboBox();
+      this.comboBox1 = new System.Windows.Forms.ComboBox();
+      this.label4 = new System.Windows.Forms.Label();
       this.SuspendLayout();
       // 
       // timePicker
@@ -84,7 +86,7 @@
       // 
       // button1
       // 
-      this.button1.Location = new System.Drawing.Point(73, 149);
+      this.button1.Location = new System.Drawing.Point(68, 164);
       this.button1.Name = "button1";
       this.button1.Size = new System.Drawing.Size(75, 23);
       this.button1.TabIndex = 10;
@@ -96,7 +98,7 @@
       // 
       this.activeBox.AutoSize = true;
       this.activeBox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.activeBox.Location = new System.Drawing.Point(18, 114);
+      this.activeBox.Location = new System.Drawing.Point(18, 144);
       this.activeBox.Name = "activeBox";
       this.activeBox.Size = new System.Drawing.Size(59, 17);
       this.activeBox.TabIndex = 11;
@@ -107,7 +109,7 @@
       // 
       this.recurringBox.AutoSize = true;
       this.recurringBox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-      this.recurringBox.Location = new System.Drawing.Point(2, 95);
+      this.recurringBox.Location = new System.Drawing.Point(2, 121);
       this.recurringBox.Name = "recurringBox";
       this.recurringBox.Size = new System.Drawing.Size(75, 17);
       this.recurringBox.TabIndex = 12;
@@ -116,7 +118,7 @@
       // 
       // button2
       // 
-      this.button2.Location = new System.Drawing.Point(154, 149);
+      this.button2.Location = new System.Drawing.Point(149, 164);
       this.button2.Name = "button2";
       this.button2.Size = new System.Drawing.Size(75, 23);
       this.button2.TabIndex = 13;
@@ -137,11 +139,31 @@
       this.dayBox.TabIndex = 14;
       this.dayBox.ValueSeparator = ",";
       // 
+      // comboBox1
+      // 
+      this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.comboBox1.FormattingEnabled = true;
+      this.comboBox1.Location = new System.Drawing.Point(61, 94);
+      this.comboBox1.Name = "comboBox1";
+      this.comboBox1.Size = new System.Drawing.Size(152, 21);
+      this.comboBox1.TabIndex = 17;
+      // 
+      // label4
+      // 
+      this.label4.AutoSize = true;
+      this.label4.Location = new System.Drawing.Point(18, 97);
+      this.label4.Name = "label4";
+      this.label4.Size = new System.Drawing.Size(41, 13);
+      this.label4.TabIndex = 18;
+      this.label4.Text = "Sound:";
+      // 
       // FrmAddReminder
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(236, 186);
+      this.ClientSize = new System.Drawing.Size(236, 202);
+      this.Controls.Add(this.label4);
+      this.Controls.Add(this.comboBox1);
       this.Controls.Add(this.dayBox);
       this.Controls.Add(this.button2);
       this.Controls.Add(this.recurringBox);
@@ -177,5 +199,7 @@
     public System.Windows.Forms.CheckBox recurringBox;
     private System.Windows.Forms.Button button2;
     public CheckComboBoxTest.CheckedComboBox dayBox;
+    public System.Windows.Forms.ComboBox comboBox1;
+    private System.Windows.Forms.Label label4;
   }
 }
